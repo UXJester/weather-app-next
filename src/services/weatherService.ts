@@ -1,16 +1,4 @@
-import {
-  WeatherData,
-  WeatherResponse,
-  LocationResponse,
-  ForecastResponse,
-} from '@/types';
-
-if (!process.env.NEXT_PUBLIC_WEATHER_API_KEY) {
-  console.error('Missing NEXT_PUBLIC_WEATHER_API_KEY environment variable');
-}
-
-const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
-const BASE_URL = 'https://dataservice.accuweather.com';
+import { WeatherData, WeatherResponse, ForecastResponse } from '@/types';
 
 // Cache configuration
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes in milliseconds
@@ -41,7 +29,7 @@ function saveToCache<T>(key: string, data: T): void {
 }
 
 /**
- * Get the current weather for a city using AccuWeather API
+ * Get the current weather for a city using our API route
  */
 export async function getCurrentWeather(city: string): Promise<WeatherData> {
   try {
@@ -52,16 +40,14 @@ export async function getCurrentWeather(city: string): Promise<WeatherData> {
       return cachedData;
     }
 
-    // Step 1: Get the location key for the city
-    const locationKey = await getLocationKey(city);
-
-    // Step 2: Get the current conditions using the location key
+    // Call our API route
     const response = await fetch(
-      `${BASE_URL}/currentconditions/v1/${locationKey}?apikey=${API_KEY}&details=true`
+      `/api/weather/current?city=${encodeURIComponent(city)}`
     );
 
     if (!response.ok) {
-      throw new Error('Weather data not available');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Weather data not available');
     }
 
     const data = (await response.json()) as WeatherResponse[];
@@ -74,42 +60,6 @@ export async function getCurrentWeather(city: string): Promise<WeatherData> {
     console.error('Error fetching weather:', error);
     throw error;
   }
-}
-
-/**
- * Get the location key for a city name
- */
-async function getLocationKey(city: string): Promise<string> {
-  // Check cache first
-  const cacheKey = `location_${city}`;
-  const cachedLocation = getFromCache<string>(cacheKey);
-  if (cachedLocation) {
-    return cachedLocation;
-  }
-
-  const response = await fetch(
-    `${BASE_URL}/locations/v1/cities/search?apikey=${API_KEY}&q=${encodeURIComponent(
-      city
-    )}`
-  );
-
-  if (!response.ok) {
-    throw new Error('Location search failed');
-  }
-
-  const locations = (await response.json()) as LocationResponse[];
-
-  if (!locations || locations.length === 0) {
-    throw new Error('City not found');
-  }
-
-  // Get the key of the first (most relevant) location
-  const locationKey = locations[0].Key;
-
-  // Save to cache
-  saveToCache(cacheKey, locationKey);
-
-  return locationKey;
 }
 
 /**
@@ -141,14 +91,14 @@ export async function getForecast(city: string): Promise<ForecastResponse> {
       return cachedData;
     }
 
-    const locationKey = await getLocationKey(city);
-
+    // Call our API route
     const response = await fetch(
-      `${BASE_URL}/forecasts/v1/daily/5day/${locationKey}?apikey=${API_KEY}&metric=false`
+      `/api/weather/forecast?city=${encodeURIComponent(city)}`
     );
 
     if (!response.ok) {
-      throw new Error('Forecast data not available');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Forecast data not available');
     }
 
     const result = (await response.json()) as ForecastResponse;
