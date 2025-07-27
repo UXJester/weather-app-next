@@ -34,7 +34,7 @@ export const Forecast = (props: ForecastProps) => {
               })}
             </div>
             <WeatherIcon
-              iconCode={day.Day.Icon.toString()}
+              iconCode={day.Day.Icon}
               description={day.Day.IconPhrase}
               className="w-12 h-12 my-2"
             />
