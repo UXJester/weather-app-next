@@ -3,6 +3,9 @@
 import type { WeatherCardProps } from '@/types';
 import { WeatherIcon } from '@/components';
 
+// Conversion factor from mph to m/s
+const MPH_TO_MS = 0.44704;
+
 export const WeatherCard = (props: WeatherCardProps) => {
   const { location, icon, description, temperature, humidity, windSpeed } =
     props;
@@ -47,10 +50,14 @@ export const WeatherCard = (props: WeatherCardProps) => {
           </p>
           <p
             className="text-gray-600 flex justify-between items-center"
-            aria-label={`Wind speed: ${(windSpeed * 0.44704).toFixed(2)} meters per second`}
+            aria-label={`Wind speed: ${(windSpeed * MPH_TO_MS).toFixed(
+              2
+            )} meters per second`}
           >
             <span>Wind:</span>{' '}
-            <span className="font-medium">{(windSpeed * 0.44704).toFixed(2)} m/s</span>
+            <span className="font-medium">
+              {(windSpeed * MPH_TO_MS).toFixed(2)} m/s
+            </span>
           </p>
         </div>
       </div>

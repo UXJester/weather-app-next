@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, FormEvent } from 'react';
 import { getCurrentWeather, getForecast } from '@/services';
 import type { WeatherData, ForecastResponse } from '@/types';
 
@@ -46,16 +46,8 @@ export function useWeather() {
     }
   }, [city]);
 
-  // Search weather with debounced city value
-  useEffect(() => {
-    if (debouncedCity.trim()) {
-      searchWeather();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedCity]);
-
   const searchWeather = useCallback(
-    async (e?: React.FormEvent) => {
+    async (e?: FormEvent) => {
       if (e) {
         e.preventDefault();
       }
@@ -89,6 +81,13 @@ export function useWeather() {
     },
     [city]
   );
+
+  // Search weather with debounced city value
+  useEffect(() => {
+    if (debouncedCity.trim()) {
+      searchWeather();
+    }
+  }, [debouncedCity, searchWeather]);
 
   return {
     city,
