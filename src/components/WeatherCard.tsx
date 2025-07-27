@@ -47,10 +47,10 @@ export const WeatherCard = (props: WeatherCardProps) => {
           </p>
           <p
             className="text-gray-600 flex justify-between items-center"
-            aria-label={`Wind speed: ${windSpeed} meters per second`}
+            aria-label={`Wind speed: ${(windSpeed * 0.44704).toFixed(2)} meters per second`}
           >
             <span>Wind:</span>{' '}
-            <span className="font-medium">{windSpeed} m/s</span>
+            <span className="font-medium">{(windSpeed * 0.44704).toFixed(2)} m/s</span>
           </p>
         </div>
       </div>
