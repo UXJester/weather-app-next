@@ -4,7 +4,7 @@ import type { WeatherData, ForecastResponse } from '@/types';
 
 // Constants for localStorage and debounce
 const LAST_CITY_KEY = 'lastSearchedCity';
-const DEBOUNCE_DELAY = 5000; // 5s delay
+const DEBOUNCE_DELAY = 500; // 500ms delay
 
 export function useWeather() {
   // Initialize city from localStorage if available (only in browser)
