@@ -75,7 +75,7 @@ function transformWeatherData(
     description: data.WeatherText,
     humidity: data.RelativeHumidity,
     windSpeed: data.Wind.Speed.Imperial.Value,
-    icon: data.WeatherIcon.toString().padStart(2, '0'), // AccuWeather uses icon codes
+    icon: data.WeatherIcon, // AccuWeather uses icon codes
   };
 }
 

@@ -101,7 +101,7 @@ export interface WeatherData {
   description: string;
   humidity: number;
   windSpeed: number;
-  icon: string;
+  icon: IconCode;
 }
 
 /**
@@ -199,7 +199,7 @@ export interface ForecastProps {
  */
 export interface WeatherCardProps {
   location: string;
-  icon: IconCode | `${number}` | `0${number}`;
+  icon: IconCode;
   description: string;
   temperature: number;
   humidity: number;
@@ -225,7 +225,7 @@ export interface SearchBarProps {
  * @property className - Optional CSS class name for styling
  */
 export interface WeatherIconProps {
-  iconCode: IconCode | `${number}` | `0${number}`;
+  iconCode: IconCode;
   description: string;
   className?: string;
 }
